@@ -1,18 +1,24 @@
 package com.practice.api.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 public class UserEntity {
+
+    public UserEntity(Long id, String name, String lastName) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +27,8 @@ public class UserEntity {
     private String name;
 
     private String lastName;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<FavoriteList> favoritesList = new ArrayList<>();
 
 }

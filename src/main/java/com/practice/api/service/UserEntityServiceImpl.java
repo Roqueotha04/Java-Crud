@@ -1,6 +1,7 @@
 package com.practice.api.service;
 
 import com.practice.api.dto.UserEntityRequest;
+import com.practice.api.dto.UserEntityResponse;
 import com.practice.api.entity.UserEntity;
 import com.practice.api.repository.UserEntityRepository;
 import org.springframework.stereotype.Service;
@@ -17,25 +18,25 @@ public class UserEntityServiceImpl implements UserEntityService{
     }
 
 
-    public com.practice.api.dto.UserEntityResponse save (UserEntityRequest userEntity){
+    public UserEntityResponse save (UserEntityRequest userEntity){
         return toResponse(userEntityRepository.save(toUser(userEntity)));
     }
 
     @Override
-    public List<com.practice.api.dto.UserEntityResponse> findAll() {
+    public List<UserEntityResponse> findAll() {
         return userEntityRepository.findAll().stream()
                 .map(this::toResponse)
                 .toList();
     }
 
-    public UserEntity toUser (UserEntityRequest userEntityRequest){
+    private UserEntity toUser (UserEntityRequest userEntityRequest){
         UserEntity user = new UserEntity();
         user.setName(userEntityRequest.name());
-        user.setName(userEntityRequest.lastName());
+        user.setLastName(userEntityRequest.lastName());
         return user;
     }
 
-    public com.practice.api.dto.UserEntityResponse toResponse (UserEntity userEntity){
-        return new com.practice.api.dto.UserEntityResponse(userEntity.getName(), userEntity.getLastName());
+    private UserEntityResponse toResponse (UserEntity userEntity){
+        return new UserEntityResponse(userEntity.getName(), userEntity.getLastName());
     }
 }
