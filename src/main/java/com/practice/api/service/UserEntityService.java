@@ -1,10 +1,12 @@
 package com.practice.api.service;
 
-import com.practice.api.entity.UserEntity;
+import com.practice.api.dto.UserEntityRequest;
+import com.practice.api.dto.UserEntityResponse;
 
 import java.util.List;
 
 public interface UserEntityService {
-    public UserEntity save (UserEntity userEntity);
-    public List<UserEntity> findAll();
+    public UserEntityResponse save (UserEntityRequest userEntity);
+    public List<UserEntityResponse> findAll();
+
 }

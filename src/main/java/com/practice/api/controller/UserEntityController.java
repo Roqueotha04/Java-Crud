@@ -1,9 +1,9 @@
 package com.practice.api.controller;
 
-import com.practice.api.entity.UserEntity;
+import com.practice.api.dto.UserEntityRequest;
+import com.practice.api.dto.UserEntityResponse;
 import com.practice.api.service.UserEntityService;
 import com.practice.api.service.UserEntityServiceImpl;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +21,14 @@ public class UserEntityController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<UserEntity> saveUser (@RequestBody UserEntity userEntity){
-        UserEntity user = userEntityService.save(userEntity);
+    public ResponseEntity<UserEntityResponse> saveUser (@RequestBody UserEntityRequest userEntity){
+        UserEntityResponse user = userEntityService.save(userEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @GetMapping()
-    public ResponseEntity<List<UserEntity>> findAll(){
-        List<UserEntity> users = userEntityService.findAll();
+    public ResponseEntity<List<UserEntityResponse>> findAll(){
+        List<UserEntityResponse> users = userEntityService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 }
