@@ -3,6 +3,7 @@ package com.practice.api.service;
 import com.practice.api.dto.UserEntityRequest;
 import com.practice.api.dto.UserEntityResponse;
 import com.practice.api.entity.UserEntity;
+import com.practice.api.exception.ResourceNotFoundException;
 import com.practice.api.repository.UserEntityRepository;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +69,7 @@ public class UserEntityServiceImpl implements UserEntityService{
     }
 
     private UserEntity getUserOrThrow(Long id){
-        return userEntityRepository.findById(id).orElseThrow();
+        return userEntityRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Resource not found"));
     }
 
 
