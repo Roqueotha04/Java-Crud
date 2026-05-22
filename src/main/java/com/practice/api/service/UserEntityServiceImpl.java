@@ -29,6 +29,33 @@ public class UserEntityServiceImpl implements UserEntityService{
                 .toList();
     }
 
+    @Override
+    public UserEntityResponse findById(Long id) {
+        return toResponse(getUserOrThrow(id));
+    }
+
+    @Override
+    public UserEntityResponse updateUser(Long id, UserEntityRequest userEntityRequest) {
+        UserEntity userEntity = getUserOrThrow(id);
+        userEntity.setName(userEntityRequest.name());
+        userEntity.setLastName(userEntityRequest.lastName());
+
+        return toResponse(userEntityRepository.save(userEntity));
+    }
+
+    @Override
+    public void delete(Long id) {
+        UserEntity userEntity = getUserOrThrow(id);
+        userEntityRepository.delete(userEntity);
+    }
+
+    @Override
+    public UserEntityResponse updateLastName(Long id, String lastName) {
+        UserEntity userEntity = getUserOrThrow(id);
+        userEntity.setLastName(lastName);
+        return toResponse(userEntityRepository.save(userEntity));
+    }
+
     private UserEntity toUser (UserEntityRequest userEntityRequest){
         UserEntity user = new UserEntity();
         user.setName(userEntityRequest.name());
@@ -39,4 +66,10 @@ public class UserEntityServiceImpl implements UserEntityService{
     private UserEntityResponse toResponse (UserEntity userEntity){
         return new UserEntityResponse(userEntity.getName(), userEntity.getLastName());
     }
+
+    private UserEntity getUserOrThrow(Long id){
+        return userEntityRepository.findById(id).orElseThrow();
+    }
+
+
 }

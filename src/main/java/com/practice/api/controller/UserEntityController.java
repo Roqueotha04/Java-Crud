@@ -31,4 +31,29 @@ public class UserEntityController {
         List<UserEntityResponse> users = userEntityService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserEntityResponse> findById(@PathVariable Long id){
+        UserEntityResponse userEntityResponse = userEntityService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userEntityResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserEntityResponse> updateUser (@PathVariable Long id, @RequestBody UserEntityRequest userEntityRequest){
+        UserEntityResponse user = userEntityService.updateUser(id, userEntityRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserEntityResponse> patchLastName (@PathVariable Long id, @RequestBody String lastName){
+        UserEntityResponse user = userEntityService.updateLastName(id, lastName);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete (@PathVariable Long id){
+        userEntityService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
