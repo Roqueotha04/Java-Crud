@@ -1,9 +1,11 @@
 package com.practice.api.controller;
 
+import com.practice.api.dto.UpdateLastNameDTO;
 import com.practice.api.dto.UserEntityRequest;
 import com.practice.api.dto.UserEntityResponse;
 import com.practice.api.service.UserEntityService;
 import com.practice.api.service.UserEntityServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,7 @@ public class UserEntityController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<UserEntityResponse> saveUser (@RequestBody UserEntityRequest userEntity){
+    public ResponseEntity<UserEntityResponse> saveUser (@RequestBody @Valid UserEntityRequest userEntity){
         UserEntityResponse user = userEntityService.save(userEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
@@ -39,14 +41,14 @@ public class UserEntityController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserEntityResponse> updateUser (@PathVariable Long id, @RequestBody UserEntityRequest userEntityRequest){
+    public ResponseEntity<UserEntityResponse> updateUser (@PathVariable Long id, @RequestBody @Valid UserEntityRequest userEntityRequest){
         UserEntityResponse user = userEntityService.updateUser(id, userEntityRequest);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserEntityResponse> patchLastName (@PathVariable Long id, @RequestBody String lastName){
-        UserEntityResponse user = userEntityService.updateLastName(id, lastName);
+    public ResponseEntity<UserEntityResponse> patchLastName (@PathVariable Long id, @RequestBody @Valid UpdateLastNameDTO lastName){
+        UserEntityResponse user = userEntityService.updateLastName(id, lastName.name());
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 

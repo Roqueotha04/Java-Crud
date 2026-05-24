@@ -29,6 +29,6 @@ public class UserEntity {
     private String lastName;
 
     @OneToMany(mappedBy = "userEntity")
-    private List<FavoriteList> favoritesList = new ArrayList<>();
+    private List<Post> post = new ArrayList<>();
 
 }
