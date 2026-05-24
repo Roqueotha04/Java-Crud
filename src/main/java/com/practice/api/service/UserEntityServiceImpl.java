@@ -30,6 +30,10 @@ public class UserEntityServiceImpl implements UserEntityService{
                 .toList();
     }
 
+    public UserEntity findEntityById(Long id) {
+        return getUserOrThrow(id);
+    }
+
     @Override
     public UserEntityResponse findById(Long id) {
         return toResponse(getUserOrThrow(id));

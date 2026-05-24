@@ -32,14 +32,21 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createPostsForUser(UserEntity user) {
-        for (int i = 1; i <= 6; i++) {
-            Post post = new Post();
-            post.setTitle("Post " + i + " de " + user.getName());
-            post.setContent("Contenido del post " + i);
-            post.setCreatedAt(LocalDateTime.now().minusDays(6 - i));
-            post.setPublished(i % 2 == 0);
-            post.setUserEntity(user);
-            postRepository.save(post);
-        }
+        postRepository.save(createPost(user, 1, "Introducción a Spring Boot", 45, true));
+        postRepository.save(createPost(user, 2, "JPA y Hibernate explicado", 30, true));
+        postRepository.save(createPost(user, 3, "Guía de testing unitario", 15, false));
+        postRepository.save(createPost(user, 4, "REST API best practices", 8, true));
+        postRepository.save(createPost(user, 5, "Docker para desarrolladores", 3, true));
+        postRepository.save(createPost(user, 6, "Microservicios con Spring", 1, false));
+    }
+
+    private Post createPost(UserEntity user, int number, String title, int daysAgo, boolean published) {
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent("Contenido detallado del post: " + title);
+        post.setCreatedAt(LocalDateTime.now().minusDays(daysAgo));
+        post.setPublished(published);
+        post.setUserEntity(user);
+        return post;
     }
 }

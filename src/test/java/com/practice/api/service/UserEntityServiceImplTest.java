@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class UserEntityServiceImplTest {
 
-    private DataProvider dataProvider = new DataProvider();
+    private final DataProvider dataProvider = new DataProvider();
 
     @Mock
     private UserEntityRepository userEntityRepository;
