@@ -6,6 +6,8 @@ import com.practice.api.entity.Post;
 import com.practice.api.entity.UserEntity;
 import com.practice.api.exception.ResourceNotFoundException;
 import com.practice.api.repository.PostRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,10 +25,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponse> findAll() {
-        return postRepository.findAll().stream()
-                .map(this::toResponse)
-                .toList();
+    public Page<PostResponse> findAll(Pageable pageable) {
+        return postRepository.findAll(pageable)
+                .map(this::toResponse);
     }
 
     @Override

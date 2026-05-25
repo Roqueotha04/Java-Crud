@@ -6,6 +6,8 @@ import com.practice.api.dto.UpdateContentDTO;
 import com.practice.api.entity.Post;
 import com.practice.api.service.PostService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,8 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<PostResponse>> findAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(postService.findAll());
+    public ResponseEntity<Page<PostResponse>> findAll(Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(postService.findAll(pageable));
     }
 
     @GetMapping("/{id}")

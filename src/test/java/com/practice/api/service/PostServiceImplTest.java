@@ -11,6 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,17 +39,20 @@ public class PostServiceImplTest {
 
     @Test
     public void testFindAll(){
-        List<Post> postList = dataProvider.getPostList();
+        List<Post> postList = dataProvider.getPostList().subList(0,3);
+        Pageable pageable = PageRequest.of(0,3);
+        Page<Post> postPage = new PageImpl<>(postList,pageable, dataProvider.getPostList().size());
 
-        when(postRepository.findAll())
-                .thenReturn(postList);
+        when(postRepository.findAll(any(Pageable.class)))
+                .thenReturn(postPage);
 
-        List<PostResponse> result = postService.findAll();
+        Page<PostResponse> result = postService.findAll(pageable);
 
-        assertEquals(postList.size(), result.size());
-        assertEquals(postList.get(1).getTitle(), result.get(1).title());
+        assertEquals(postList.size(), result.getContent().size());
+        assertEquals(dataProvider.getPostList().size(), result.getTotalElements());
+        assertEquals(2, result.getTotalPages());
 
-        verify(postRepository).findAll();
+        verify(postRepository).findAll(any(Pageable.class));
     }
 
     @Test
