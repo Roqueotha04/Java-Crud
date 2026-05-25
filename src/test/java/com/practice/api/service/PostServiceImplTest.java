@@ -3,6 +3,7 @@ package com.practice.api.service;
 import com.practice.api.dto.PostRequest;
 import com.practice.api.dto.PostResponse;
 import com.practice.api.entity.Post;
+import com.practice.api.entity.UserEntity;
 import com.practice.api.provider.DataProvider;
 import com.practice.api.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,13 +47,37 @@ public class PostServiceImplTest {
         when(postRepository.findAll(any(Pageable.class)))
                 .thenReturn(postPage);
 
-        Page<PostResponse> result = postService.findAll(pageable);
+        Page<PostResponse> result = postService.findAll(null, pageable);
 
         assertEquals(postList.size(), result.getContent().size());
         assertEquals(dataProvider.getPostList().size(), result.getTotalElements());
         assertEquals(2, result.getTotalPages());
 
         verify(postRepository).findAll(any(Pageable.class));
+    }
+
+    @Test
+    public void testFindAllByUserId(){
+        Long userId=1L;
+        UserEntity user = new UserEntity(userId, "Roque", "Fernandez");
+
+        List<Post> userPosts= dataProvider.getPostList().stream()
+                .filter(post -> post.getUserEntity().getId().equals(userId))
+                .limit(3)
+                .toList();
+
+        Pageable pageable = PageRequest.of(0,3);
+        Page<Post> postPage = new PageImpl<>(userPosts, pageable, userPosts.size());
+
+        when(postRepository.findByUserEntityId(eq(userId), any(Pageable.class)))
+                .thenReturn(postPage);
+
+        Page<PostResponse> result = postService.findAll(userId, pageable);
+
+        assertEquals(userPosts.size(), result.getSize());
+        assertEquals(userId, result.getContent().get(0).userId());
+
+        verify(postRepository).findByUserEntityId(eq(userId), any(Pageable.class));
     }
 
     @Test

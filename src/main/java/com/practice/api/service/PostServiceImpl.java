@@ -25,9 +25,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostResponse> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable)
-                .map(this::toResponse);
+    public Page<PostResponse> findAll(Long id, Pageable pageable) {
+        if(id==null){
+            return postRepository.findAll(pageable).map(this::toResponse);
+        }else{
+            return postRepository.findByUserEntityId(id, pageable).map(this::toResponse);
+        }
     }
 
     @Override

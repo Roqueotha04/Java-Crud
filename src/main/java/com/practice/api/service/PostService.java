@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface PostService {
-    public Page<PostResponse> findAll(Pageable pageable);
+    public Page<PostResponse> findAll(Long id, Pageable pageable);
     public PostResponse findById(Long id);
     public PostResponse savePost(PostRequest postRequest);
     public PostResponse updatePost(Long id, PostRequest postRequest);

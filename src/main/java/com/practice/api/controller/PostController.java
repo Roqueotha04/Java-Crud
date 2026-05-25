@@ -25,8 +25,8 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<PostResponse>> findAll(Pageable pageable){
-        return ResponseEntity.status(HttpStatus.OK).body(postService.findAll(pageable));
+    public ResponseEntity<Page<PostResponse>> findAll(@RequestParam (required = false) Long userId, Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(postService.findAll(userId, pageable));
     }
 
     @GetMapping("/{id}")
