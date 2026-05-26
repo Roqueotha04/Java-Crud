@@ -11,6 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +50,34 @@ public class UserEntityServiceImplTest {
     @Test
     void testFindAll(){
         List<UserEntity> userEntityList = dataProvider.getUserEntityList();
+        Pageable pageable = PageRequest.of(0,3);
+        Page<UserEntity> page = new PageImpl<>(userEntityList, pageable, 6);
+        when (userEntityRepository.findAll(any(Pageable.class)))
+                .thenReturn(page);
 
-        when (userEntityRepository.findAll())
-                .thenReturn(userEntityList);
+        Page<UserEntityResponse> result = userEntityServiceImpl.findAll(null, pageable);
+        assertEquals(page.getTotalElements(), result.getTotalElements());
+        assertEquals(page.getTotalPages(), result.getTotalPages());
+        assertEquals(userEntityList.get(0).getName(), result.getContent().get(0).name());
 
-        List<UserEntityResponse> result = userEntityServiceImpl.findAll();
-        assertEquals(userEntityList.size(), result.size());
-        assertEquals(userEntityList.get(0).getName(), result.get(0).name());
+        verify(userEntityRepository).findAll(any(Pageable.class));
+    }
+
+    @Test
+    void testFindAllByUserId(){
+        String name = "pepe";
+        List<UserEntity> userEntityList = dataProvider.getUserEntityList();
+        Pageable pageable = PageRequest.of(0,3);
+        Page<UserEntity> page = new PageImpl<>(userEntityList, pageable, 6);
+        when (userEntityRepository.findByNameContainingIgnoreCase(eq(name), any(Pageable.class)))
+                .thenReturn(page);
+
+        Page<UserEntityResponse> result = userEntityServiceImpl.findAll(name, pageable);
+        assertEquals(page.getTotalElements(), result.getTotalElements());
+        assertEquals(page.getTotalPages(), result.getTotalPages());
+        assertEquals(userEntityList.get(0).getName(), result.getContent().get(0).name());
+
+        verify(userEntityRepository).findByNameContainingIgnoreCase(eq(name), any(Pageable.class));
     }
 
     @Test

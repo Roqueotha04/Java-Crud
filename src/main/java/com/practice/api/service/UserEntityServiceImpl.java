@@ -5,6 +5,8 @@ import com.practice.api.dto.UserEntityResponse;
 import com.practice.api.entity.UserEntity;
 import com.practice.api.exception.ResourceNotFoundException;
 import com.practice.api.repository.UserEntityRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +26,12 @@ public class UserEntityServiceImpl implements UserEntityService{
     }
 
     @Override
-    public List<UserEntityResponse> findAll() {
-        return userEntityRepository.findAll().stream()
-                .map(this::toResponse)
-                .toList();
+    public Page<UserEntityResponse> findAll(String name, Pageable pageable) {
+        if (name==null){
+            return userEntityRepository.findAll(pageable).map(this::toResponse);
+        }else{
+            return userEntityRepository.findByNameContainingIgnoreCase(name, pageable).map(this::toResponse);
+        }
     }
 
     public UserEntity findEntityById(Long id) {

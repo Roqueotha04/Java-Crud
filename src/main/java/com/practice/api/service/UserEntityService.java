@@ -3,13 +3,15 @@ package com.practice.api.service;
 import com.practice.api.dto.UserEntityRequest;
 import com.practice.api.dto.UserEntityResponse;
 import com.practice.api.entity.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface UserEntityService {
     public UserEntityResponse save(UserEntityRequest userEntity);
 
-    public List<UserEntityResponse> findAll();
+    public Page<UserEntityResponse> findAll(String name, Pageable pageable);
 
     public UserEntity findEntityById(Long id);
 

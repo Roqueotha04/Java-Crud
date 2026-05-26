@@ -6,6 +6,8 @@ import com.practice.api.dto.UserEntityResponse;
 import com.practice.api.service.UserEntityService;
 import com.practice.api.service.UserEntityServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,9 @@ public class UserEntityController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<UserEntityResponse>> findAll(){
-        List<UserEntityResponse> users = userEntityService.findAll();
+    public ResponseEntity<Page<UserEntityResponse>> findAll(@RequestParam (required = false) String name,
+                                                            Pageable pageable){
+        Page<UserEntityResponse> users = userEntityService.findAll(name, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
