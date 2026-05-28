@@ -1,30 +1,48 @@
 package com.practice.api.initializer;
 
 import com.practice.api.entity.Post;
+import com.practice.api.entity.RoleEntity;
+import com.practice.api.entity.RoleEnum;
 import com.practice.api.entity.UserEntity;
 import com.practice.api.repository.PostRepository;
+import com.practice.api.repository.RoleEntityRepository;
 import com.practice.api.repository.UserEntityRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Component
 public class DataLoader implements CommandLineRunner {
 
     private final UserEntityRepository userRepository;
     private final PostRepository postRepository;
+    private final RoleEntityRepository roleRepository;
 
-    public DataLoader(UserEntityRepository userRepository, PostRepository postRepository) {
+    public DataLoader(UserEntityRepository userRepository, PostRepository postRepository, RoleEntityRepository roleRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public void run(String... args) {
-        UserEntity user1 = userRepository.save(new UserEntity(null, "Roque", "Fernandez"));
-        UserEntity user2 = userRepository.save(new UserEntity(null, "Juan", "Perez"));
-        UserEntity user3 = userRepository.save(new UserEntity(null, "Maria", "Lopez"));
+        RoleEntity roleAdmin = roleRepository.save(new RoleEntity(null, RoleEnum.ADMIN));
+        RoleEntity roleUser  = roleRepository.save(new RoleEntity(null, RoleEnum.USER));
+        RoleEntity roleGuest = roleRepository.save(new RoleEntity(null, RoleEnum.GUEST));
+
+        UserEntity user1 = new UserEntity(null, "Roque", "Fernandez");
+        user1.setRoleEntitySet(Set.of(roleAdmin, roleUser));
+        userRepository.save(user1);
+
+        UserEntity user2 = new UserEntity(null, "Juan", "Perez");
+        user2.setRoleEntitySet(Set.of(roleUser));
+        userRepository.save(user2);
+
+        UserEntity user3 = new UserEntity(null, "Maria", "Lopez");
+        user3.setRoleEntitySet(Set.of(roleUser, roleGuest));
+        userRepository.save(user3);
 
         createPostsForUser(user1);
         createPostsForUser(user2);
