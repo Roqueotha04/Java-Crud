@@ -1,5 +1,7 @@
 package com.practice.api.utils;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -19,7 +21,7 @@ public class JwtUtils {
     private String privateKey;
 
     public String generateToken(Authentication authentication){
-        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(privateKey));
+        SecretKey key = getSigningKey();
 
         String username = authentication.getName();
         String authorities = authentication.getAuthorities().stream()
@@ -36,5 +38,21 @@ public class JwtUtils {
                 .compact();
 
         return jwtToken;
+    }
+
+    public Claims verifyToken(String jwtToken){
+        SecretKey key = getSigningKey();
+
+        Claims claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(jwtToken)
+                .getPayload();
+
+        return claims;
+    }
+
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(privateKey));
     }
 }
