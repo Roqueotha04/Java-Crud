@@ -8,6 +8,7 @@ import com.practice.api.repository.PostRepository;
 import com.practice.api.repository.RoleEntityRepository;
 import com.practice.api.repository.UserEntityRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -19,11 +20,14 @@ public class DataLoader implements CommandLineRunner {
     private final UserEntityRepository userRepository;
     private final PostRepository postRepository;
     private final RoleEntityRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DataLoader(UserEntityRepository userRepository, PostRepository postRepository, RoleEntityRepository roleRepository) {
+    public DataLoader(UserEntityRepository userRepository, PostRepository postRepository,
+                      RoleEntityRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -32,15 +36,15 @@ public class DataLoader implements CommandLineRunner {
         RoleEntity roleUser  = roleRepository.save(new RoleEntity(null, RoleEnum.USER));
         RoleEntity roleGuest = roleRepository.save(new RoleEntity(null, RoleEnum.GUEST));
 
-        UserEntity user1 = new UserEntity(null, "Roque", "Fernandez");
+        UserEntity user1 = new UserEntity(null, "Roque", "roque_f", passwordEncoder.encode("admin123"), "Fernandez");
         user1.setRoleEntitySet(Set.of(roleAdmin, roleUser));
         userRepository.save(user1);
 
-        UserEntity user2 = new UserEntity(null, "Juan", "Perez");
+        UserEntity user2 = new UserEntity(null, "Juan", "juan_p", passwordEncoder.encode("user123"), "Perez");
         user2.setRoleEntitySet(Set.of(roleUser));
         userRepository.save(user2);
 
-        UserEntity user3 = new UserEntity(null, "Maria", "Lopez");
+        UserEntity user3 = new UserEntity(null, "Maria", "maria_l", passwordEncoder.encode("user123"), "Lopez");
         user3.setRoleEntitySet(Set.of(roleUser, roleGuest));
         userRepository.save(user3);
 

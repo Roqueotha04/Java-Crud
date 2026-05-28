@@ -8,17 +8,17 @@ import java.util.List;
 
 public class DataProvider {
 
-    public List<UserEntity> getUserEntityList (){
+    public List<UserEntity> getUserEntityList() {
         return List.of(
-                new UserEntity(1L, "user1", "lastname1"),
-                new UserEntity(2L, "user2", "lastname3"),
-                new UserEntity(3L, "user2", "lastname3")
+                new UserEntity(1L, "user1", "user1_un", "hashedpass1", "lastname1"),
+                new UserEntity(2L, "user2", "user2_un", "hashedpass2", "lastname2"),
+                new UserEntity(3L, "user3", "user3_un", "hashedpass3", "lastname3")
         );
     }
 
     public List<Post> getPostList() {
-        UserEntity user1 = new UserEntity(1L, "user1", "lastname1");
-        UserEntity user2 = new UserEntity(2L, "user2", "lastname2");
+        UserEntity user1 = new UserEntity(1L, "user1", "user1_un", "hashedpass1", "lastname1");
+        UserEntity user2 = new UserEntity(2L, "user2", "user2_un", "hashedpass2", "lastname2");
 
         return List.of(
                 createPost(1L, "Post 1", "Content for post 1", LocalDateTime.now().minusDays(5), true, user1),

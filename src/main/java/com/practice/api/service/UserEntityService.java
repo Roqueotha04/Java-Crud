@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserEntityService {
     public UserEntityResponse save(UserEntityRequest userEntity);
 
-    public Page<UserEntityResponse> findAll(String name, Pageable pageable);
+    public Page<UserEntityResponse> findAll(String username, Pageable pageable);
 
     public UserEntity findEntityById(Long id);
 

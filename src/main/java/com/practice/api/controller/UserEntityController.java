@@ -31,9 +31,9 @@ public class UserEntityController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<UserEntityResponse>> findAll(@RequestParam (required = false) String name,
+    public ResponseEntity<Page<UserEntityResponse>> findAll(@RequestParam (required = false) String username,
                                                             Pageable pageable){
-        Page<UserEntityResponse> users = userEntityService.findAll(name, pageable);
+        Page<UserEntityResponse> users = userEntityService.findAll(username, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 

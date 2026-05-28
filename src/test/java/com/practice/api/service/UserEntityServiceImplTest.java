@@ -5,7 +5,6 @@ import com.practice.api.dto.UserEntityResponse;
 import com.practice.api.entity.UserEntity;
 import com.practice.api.provider.DataProvider;
 import com.practice.api.repository.UserEntityRepository;
-import org.apache.catalina.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,59 +30,63 @@ public class UserEntityServiceImplTest {
     @Mock
     private UserEntityRepository userEntityRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private UserEntityServiceImpl userEntityServiceImpl;
 
     @Test
-    void testSave(){
-        UserEntityRequest userEntityRequest = new UserEntityRequest("pepe", "Cacho");
+    void testSave() {
+        UserEntityRequest userEntityRequest = new UserEntityRequest("pepe", "Cacho", "pepe_c", "secret123");
 
+        when(passwordEncoder.encode(anyString())).thenReturn("encoded_password");
         when(userEntityRepository.save(any(UserEntity.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         UserEntityResponse result = userEntityServiceImpl.save(userEntityRequest);
+
         assertEquals(userEntityRequest.name(), result.name());
         assertEquals(userEntityRequest.lastName(), result.lastName());
+        assertEquals(userEntityRequest.username(), result.username());
         verify(userEntityRepository).save(any(UserEntity.class));
     }
 
     @Test
-    void testFindAll(){
+    void testFindAll() {
         List<UserEntity> userEntityList = dataProvider.getUserEntityList();
-        Pageable pageable = PageRequest.of(0,3);
+        Pageable pageable = PageRequest.of(0, 3);
         Page<UserEntity> page = new PageImpl<>(userEntityList, pageable, 6);
-        when (userEntityRepository.findAll(any(Pageable.class)))
-                .thenReturn(page);
+        when(userEntityRepository.findAll(any(Pageable.class))).thenReturn(page);
 
         Page<UserEntityResponse> result = userEntityServiceImpl.findAll(null, pageable);
+
         assertEquals(page.getTotalElements(), result.getTotalElements());
         assertEquals(page.getTotalPages(), result.getTotalPages());
         assertEquals(userEntityList.get(0).getName(), result.getContent().get(0).name());
-
         verify(userEntityRepository).findAll(any(Pageable.class));
     }
 
     @Test
-    void testFindAllByUserId(){
-        String name = "pepe";
+    void testFindAllByUsername() {
+        String username = "user1_un";
         List<UserEntity> userEntityList = dataProvider.getUserEntityList();
-        Pageable pageable = PageRequest.of(0,3);
+        Pageable pageable = PageRequest.of(0, 3);
         Page<UserEntity> page = new PageImpl<>(userEntityList, pageable, 6);
-        when (userEntityRepository.findByNameContainingIgnoreCase(eq(name), any(Pageable.class)))
+        when(userEntityRepository.findByUsernameContainingIgnoreCase(eq(username), any(Pageable.class)))
                 .thenReturn(page);
 
-        Page<UserEntityResponse> result = userEntityServiceImpl.findAll(name, pageable);
+        Page<UserEntityResponse> result = userEntityServiceImpl.findAll(username, pageable);
+
         assertEquals(page.getTotalElements(), result.getTotalElements());
         assertEquals(page.getTotalPages(), result.getTotalPages());
-        assertEquals(userEntityList.get(0).getName(), result.getContent().get(0).name());
-
-        verify(userEntityRepository).findByNameContainingIgnoreCase(eq(name), any(Pageable.class));
+        assertEquals(userEntityList.get(0).getUsername(), result.getContent().get(0).username());
+        verify(userEntityRepository).findByUsernameContainingIgnoreCase(eq(username), any(Pageable.class));
     }
 
     @Test
-    void testFindById(){
+    void testFindById() {
         UserEntity userEntity = dataProvider.getUserEntityList().get(0);
-
         when(userEntityRepository.findById(1L)).thenReturn(Optional.of(userEntity));
 
         UserEntityResponse user = userEntityServiceImpl.findById(1L);
@@ -91,29 +94,31 @@ public class UserEntityServiceImplTest {
         assertNotNull(user);
         assertEquals(userEntity.getName(), user.name());
         assertEquals(userEntity.getLastName(), user.lastName());
-
+        assertEquals(userEntity.getUsername(), user.username());
         verify(userEntityRepository).findById(1L);
     }
 
     @Test
-    void testUpdate(){
+    void testUpdate() {
         UserEntity userEntity = dataProvider.getUserEntityList().get(0);
-        UserEntityRequest userEntityRequest = new UserEntityRequest(userEntity.getName(), "pepe");
+        UserEntityRequest userEntityRequest = new UserEntityRequest(userEntity.getName(), "newLastName", "new_username", "newpass123");
+
         when(userEntityRepository.findById(1L)).thenReturn(Optional.of(userEntity));
+        when(passwordEncoder.encode(anyString())).thenReturn("encoded_password");
         when(userEntityRepository.save(any(UserEntity.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         UserEntityResponse result = userEntityServiceImpl.updateUser(1L, userEntityRequest);
 
         assertEquals(userEntity.getName(), result.name());
-        assertEquals("pepe", result.lastName());
-
+        assertEquals("newLastName", result.lastName());
+        assertEquals("new_username", result.username());
         verify(userEntityRepository).findById(1L);
         verify(userEntityRepository).save(any(UserEntity.class));
     }
 
     @Test
-    void testPatchLastName(){
+    void testPatchLastName() {
         UserEntity userEntity = dataProvider.getUserEntityList().get(0);
         String lastname = "pepe";
         when(userEntityRepository.findById(1L)).thenReturn(Optional.of(userEntity));
@@ -124,17 +129,17 @@ public class UserEntityServiceImplTest {
 
         assertEquals(userEntity.getName(), result.name());
         assertEquals("pepe", result.lastName());
-
         verify(userEntityRepository).findById(1L);
         verify(userEntityRepository).save(any(UserEntity.class));
     }
 
     @Test
-    void testDelete(){
+    void testDelete() {
         UserEntity userEntity = dataProvider.getUserEntityList().get(0);
         when(userEntityRepository.findById(1L)).thenReturn(Optional.of(userEntity));
 
         userEntityServiceImpl.delete(1L);
+
         verify(userEntityRepository).findById(1L);
         verify(userEntityRepository).delete(userEntity);
     }
