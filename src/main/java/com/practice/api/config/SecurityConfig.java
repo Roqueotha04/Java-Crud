@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests( http ->{
+                    http.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/auth/signup").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN");
                     http.anyRequest().authenticated();
                 })

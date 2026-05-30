@@ -10,6 +10,7 @@ import com.practice.api.repository.UserEntityRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -31,6 +32,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     @Override
+    @Transactional
     public void run(String... args) {
         RoleEntity roleAdmin = roleRepository.save(new RoleEntity(null, RoleEnum.ADMIN));
         RoleEntity roleUser  = roleRepository.save(new RoleEntity(null, RoleEnum.USER));

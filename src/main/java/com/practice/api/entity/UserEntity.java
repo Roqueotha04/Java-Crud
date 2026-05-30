@@ -51,7 +51,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity")
     private List<Post> post = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "user_x_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roleEntitySet = new HashSet<>();
 
