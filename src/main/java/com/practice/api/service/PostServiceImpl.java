@@ -8,6 +8,7 @@ import com.practice.api.exception.ResourceNotFoundException;
 import com.practice.api.repository.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,13 @@ public class PostServiceImpl implements PostService {
         }else{
             return postRepository.findByUserEntityId(id, pageable).map(this::toResponse);
         }
+    }
+
+    @Override
+    public List<PostResponse> findByUsername(String username, Sort sort) {
+        return postRepository.findByUserEntityUsername(username, sort).stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Override

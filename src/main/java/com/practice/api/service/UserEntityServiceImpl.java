@@ -7,8 +7,11 @@ import com.practice.api.exception.ResourceNotFoundException;
 import com.practice.api.repository.UserEntityRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserEntityServiceImpl implements UserEntityService {
@@ -34,6 +37,7 @@ public class UserEntityServiceImpl implements UserEntityService {
             return userEntityRepository.findByUsernameContainingIgnoreCase(username, pageable).map(this::toResponse);
         }
     }
+
 
     @Override
     public UserEntity findEntityById(Long id) {

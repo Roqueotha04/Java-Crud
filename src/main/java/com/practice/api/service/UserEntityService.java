@@ -5,6 +5,8 @@ import com.practice.api.dto.UserEntityResponse;
 import com.practice.api.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 

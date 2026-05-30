@@ -8,6 +8,8 @@ import com.practice.api.service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,13 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<PostResponse>> findAll(@RequestParam (required = false) Long userId, Pageable pageable){
+    public ResponseEntity<Page<PostResponse>> findAll(@RequestParam (required = false) Long userId, @PageableDefault(size=10, sort="title", direction= Sort.Direction.ASC)   Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK).body(postService.findAll(userId, pageable));
+    }
+
+    @GetMapping("/by-username/{username}")
+    public ResponseEntity<List<PostResponse>> findByUsername(@PathVariable String username, Sort sort){
+        return ResponseEntity.status(HttpStatus.OK).body(postService.findByUsername(username, sort));
     }
 
     @GetMapping("/{id}")

@@ -4,11 +4,13 @@ import com.practice.api.dto.PostRequest;
 import com.practice.api.dto.PostResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
 public interface PostService {
     public Page<PostResponse> findAll(Long id, Pageable pageable);
+    public List<PostResponse> findByUsername(String username, Sort sort);
     public PostResponse findById(Long id);
     public PostResponse savePost(PostRequest postRequest);
     public PostResponse updatePost(Long id, PostRequest postRequest);
