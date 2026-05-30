@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @Entity
 public class RoleEntity {
 
+    public RoleEntity(RoleEnum roleEnum) {
+        this.roleEnum = roleEnum;
+    }
+
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;

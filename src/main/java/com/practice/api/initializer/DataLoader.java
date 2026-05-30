@@ -36,15 +36,15 @@ public class DataLoader implements CommandLineRunner {
         RoleEntity roleUser  = roleRepository.save(new RoleEntity(null, RoleEnum.USER));
         RoleEntity roleGuest = roleRepository.save(new RoleEntity(null, RoleEnum.GUEST));
 
-        UserEntity user1 = new UserEntity(null, "Roque", "roque_f", passwordEncoder.encode("admin123"), "Fernandez");
+        UserEntity user1 = new UserEntity("Roque", "roque_f", passwordEncoder.encode("admin123"), "Fernandez");
         user1.setRoleEntitySet(Set.of(roleAdmin, roleUser));
         userRepository.save(user1);
 
-        UserEntity user2 = new UserEntity(null, "Juan", "juan_p", passwordEncoder.encode("user123"), "Perez");
+        UserEntity user2 = new UserEntity("Juan", "juan_p", passwordEncoder.encode("user123"), "Perez");
         user2.setRoleEntitySet(Set.of(roleUser));
         userRepository.save(user2);
 
-        UserEntity user3 = new UserEntity(null, "Maria", "maria_l", passwordEncoder.encode("user123"), "Lopez");
+        UserEntity user3 = new UserEntity("Maria", "maria_l", passwordEncoder.encode("user123"), "Lopez");
         user3.setRoleEntitySet(Set.of(roleUser, roleGuest));
         userRepository.save(user3);
 

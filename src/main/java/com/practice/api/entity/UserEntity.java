@@ -16,8 +16,7 @@ import java.util.Set;
 @Entity
 public class UserEntity {
 
-    public UserEntity(Long id, String name, String username, String password, String lastName) {
-        this.id = id;
+    public UserEntity(String name, String username, String password, String lastName) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -27,6 +26,8 @@ public class UserEntity {
         this.isAccountNonLocked=true;
         this.isEnabled=true;
     }
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
